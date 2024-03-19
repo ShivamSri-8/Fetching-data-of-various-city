@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Cities</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+
+  .city {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .city img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .city-info {
+    padding: 20px;
+  }
+
+  .city-info h2 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  .city-info p {
+    color: #666;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="cityContainer">
+  <!-- City details will be dynamically added here -->
+</div>
+
+<script>
+  // Fetch JSON data
+  fetch('https://api.npoint.io/7bbd3a59c401f616bb89')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const places = data.places;
+      const cityContainer = document.getElementById('cityContainer');
+
+      // Dynamically create HTML elements for each city
+      places.forEach(city => {
+        const cityDiv = document.createElement('div');
+        cityDiv.classList.add('city');
+
+        const image = document.createElement('img');
+        image.src = city.image;
+        cityDiv.appendChild(image);
+
+        const cityInfo = document.createElement('div');
+        cityInfo.classList.add('city-info');
+
+        const cityName = document.createElement('h2');
+        cityName.textContent = city.name;
+        cityInfo.appendChild(cityName);
+
+        const cityDesc = document.createElement('p');
+        cityDesc.textContent = city.info;
+        cityInfo.appendChild(cityDesc);
+
+        cityDiv.appendChild(cityInfo);
+        cityContainer.appendChild(cityDiv);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      const cityContainer = document.getElementById('cityContainer');
+      cityContainer.innerHTML = '<p>Failed to fetch data. Please try again later.</p>';
+    });
+</script>
+
+</body>
+</html>
